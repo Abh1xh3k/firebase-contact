@@ -4,12 +4,15 @@ import './App.css'
 import { FiSearch } from "react-icons/fi";
 import { FaPlusCircle } from "react-icons/fa";
 import { db } from './config/firebase';
-import {collection, getDocs} from 'firebase/firestore'
+import {collection, getDocs, onSnapshot} from 'firebase/firestore'
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { FaTrashCan } from "react-icons/fa6";
 import { MdEditSquare } from "react-icons/md";
 import ContactCards from './components/ContactCards';
-import Modal from './components/Modal';
+// import Modal from './components/Modal';
+import AddAndupdate from './components/AddAndupdate';
+import { ToastContainer, toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -30,23 +33,49 @@ function App() {
 useEffect(()=>{
   const getContacts=async()=>{
     try {
-      const contactsRef = await getDocs(collection(db, "contacts"), {
-        name: "Abhishek",
-        email: "abhishek@gmail.com"
-      });
-      const contactList=contactsRef.docs.map((doc)=>{
-         return {
-          id:doc.id,
-        ...doc.data()
-      }
-      })
-      setcontacts(contactList);
+      const contactsRef=collection(db,"contacts");
+      // const contactsSnapshot=await getDocs(contactsRef);
+
+     onSnapshot(contactsRef,(snapshot)=>{
+      const contactList=snapshot.docs.map((doc)=>{
+        return {
+         id:doc.id,
+       ...doc.data()
+     }
+     })
+     setcontacts(contactList);
+     return contactList;
+     })
+
+      
     } catch (e) {
       console.error("Error adding document: ", e);
     }
   };
     getContacts();
 },[]);
+
+
+const filterContacts=(e)=>{
+  const value=e.target.value;
+  const contactsRef=collection(db,"contacts");
+  // const contactsSnapshot=await getDocs(contactsRef);
+
+ onSnapshot(contactsRef,(snapshot)=>{
+  const contactList=snapshot.docs.map((doc)=>{
+    return {
+     id:doc.id,
+   ...doc.data()
+ }
+ })
+
+
+ const filterContacts=contactList.filter(contacts=>contacts.name.toLowerCase().includes(value.toLowerCase()))
+ setcontacts(filterContacts);
+ return filterContacts;
+ })
+
+}
 
   return (
     <>
@@ -55,7 +84,9 @@ useEffect(()=>{
          <div className='flex gap-2'>
          <div className=' relative flex items-center flex-grow'>
           <FiSearch  className=' m-1 text-3xl  absolute  '/>
-            <input type="text" 
+            <input 
+              onChange={filterContacts}
+              type="text" 
              className='  pl-9 flex-grow h-10 border bg-transparent border-black rounded-md'/>
           </div>
           <FaPlusCircle 
@@ -70,8 +101,9 @@ useEffect(()=>{
           }
          </div>
        </div>
-       <Modal isOpen={isOpen} onClose={onClose}> 
-       </Modal>
+      <AddAndupdate 
+       onClose={onClose} isOpen={isOpen}/>
+       <ToastContainer />
     </>
   )
 }

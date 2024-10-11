@@ -7,7 +7,7 @@ const modal = ({ onClose, isOpen, children }) => {
     <>
       {isOpen && (
         <>
-          <div className=" m-auto z-50 relative min-h-[200px] max-w-[80%] bg-white p-4">
+          <div className="z-50 left-0 right-0 ml-auto mr-auto   absolute top-10  min-h-[200px] max-w-[80%] bg-white p-4">
             <div className="flex justify-end ">
               <IoMdCloseCircleOutline onClick={onClose} className=" relative  text-2xl  " />
             </div>
@@ -22,3 +22,11 @@ const modal = ({ onClose, isOpen, children }) => {
 };
 
 export default modal;
+ 
+
+// position: absolute;
+// left: 0;
+// right: 0;
+// margin-left: auto;
+// margin-right: auto;
+// width: 100px;
