@@ -11,11 +11,11 @@ const contactSchemavalidation = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Email is required"),
 });
 
-function AddAndupdate({ isOpen, onClose, isUpdate, contact }) {
+function AddAndupdate({ isOpen, onClose, isUpdate, contact, user }) {
   const AddContact = async (contact) => {
     try {
       const contactRef = collection(db, "contacts");
-      await addDoc(contactRef, contact);
+      await addDoc(contactRef, {...contact, _id:user.email});
       onClose();
       toast.success("Contact Created Sucessfully");
     } catch (error) {

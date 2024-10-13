@@ -6,10 +6,9 @@ import { MdEditSquare } from 'react-icons/md'
 import { db } from '../config/firebase'
 import AddAndupdate from './AddAndupdate'
 import { toast } from 'react-toastify'
-      
+
+
 const ContactCards = ({contacts}) => {
-
-
   
   const[isOpen,setopen]=useState(false);
   
